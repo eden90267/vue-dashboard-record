@@ -30,10 +30,13 @@
     },
     methods: {
       signin() {
-        const api = `${process.env.API_PATH}/signin`;
+        const api = `${process.env.API_PATH}/admin/signin`;
         const vm = this;
         this.$http.post(api, vm.user).then((res) => {
           console.log(res.data);
+          if (res.data.success) {
+            this.$router.push('/');
+          }
         })
       }
     }
