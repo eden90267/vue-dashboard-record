@@ -4,10 +4,12 @@ import axios from 'axios'
 import Login from '@/components/pages/Login'
 import Dashboard from '@/components/Dashboard'
 import Products from '@/components/pages/Products'
+import CustomerOrders from '@/components/pages/CustomerOrders'
 
 Vue.use(Router)
 
 const router = new Router({
+  linkActiveClass: 'active',
   routes: [
     {
       path: '*',
@@ -30,7 +32,18 @@ const router = new Router({
           meta: {requiresAuth: true}, // 路由訊息
         },
       ]
-    }
+    },
+    {
+      path: '/',
+      component: Dashboard,
+      children: [
+        {
+          path: 'customer-orders',
+          name: 'CustomerOrders',
+          component: CustomerOrders
+        },
+      ]
+    },
   ]
 })
 

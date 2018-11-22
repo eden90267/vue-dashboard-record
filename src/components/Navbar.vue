@@ -18,9 +18,10 @@
     methods: {
       signout() {
         const api = `${process.env.API_PATH}/logout`;
+        const vm = this;
         this.$http.post(api).then((res) => {
           if (res.data.success) {
-            this.$router.push('/login');
+            vm.$router.push('/login');
           }
         })
       }

@@ -11,8 +11,8 @@
       <tr>
         <th width="120">分類</th>
         <th>產品名稱</th>
-        <th width="120">原價</th>
-        <th width="120">售價</th>
+        <th width="130">原價</th>
+        <th width="130">售價</th>
         <th width="100">是否啟用</th>
         <th width="120">動作</th>
       </tr>
@@ -22,10 +22,10 @@
         <td>{{item.category}}</td>
         <td>{{item.title}}</td>
         <td class="text-right">
-          {{item.origin_price}}
+          {{item.origin_price | currency}}
         </td>
         <td class="text-right">
-          {{item.price}}
+          {{item.price | currency}}
         </td>
         <td>
           <span v-if="item.is_enabled" class="text-success">啟用</span>
