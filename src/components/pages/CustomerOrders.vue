@@ -23,7 +23,7 @@
               <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
+            <button type="button" class="btn btn-outline-danger btn-sm ml-auto" @click="addToCart(item.id)">
               <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
               加到購物車
             </button>
@@ -62,11 +62,56 @@
             <div class="text-muted text-nowrap mr-3">
               小計 <strong>{{ product.num * product.price }}</strong> 元
             </div>
-            <button type="button" class="btn btn-primary" @click="addToCart(item.id, product.num)">
+            <button type="button" class="btn btn-primary" @click="addToCart(product.id, product.num)">
               <i class="fas fa-spinner fa-spin" v-if="product.id === status.loadingItem"></i>
               加到購物車
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="my-5 row justify-content-center">
+      <table class="table w-75">
+        <thead>
+        <th></th>
+        <th>品名</th>
+        <th>數量</th>
+        <th>單價</th>
+        </thead>
+        <tbody>
+        <tr v-for="item in cart.carts">
+          <td class="align-middle">
+            <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </td>
+          <td class="align-middle">
+            {{ item.product.title }}
+            <div class="text-success" v-if="item.coupon">
+              已套用優惠券
+            </div>
+          </td>
+          <td class="align-middle">{{ item.qty }}/{{ item.product.unit }}</td>
+          <td class="align-middle text-right">{{ item.final_total }}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="3" class="text-right">總計</td>
+          <td class="text-right">{{ cart.total }}</td>
+        </tr>
+        <tr v-if="cart.final_total !== cart.total">
+          <td colspan="3" class="text-right text-success">折扣價</td>
+          <td class="text-right text-success">{{ cart.final_total }}</td>
+        </tr>
+        </tfoot>
+      </table>
+      <div class="input-group mb-3 input-group-sm w-75">
+        <input type="text" class="form-control" v-model="coupon_code" placeholder="請輸入優惠碼">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">
+            套用優惠碼
+          </button>
         </div>
       </div>
     </div>
@@ -82,10 +127,12 @@
       return {
         products: [],
         product: {},
+        cart: {},
         isLoading: false,
         status: {
           loadingItem: '', // 產品 id
-        }
+        },
+        coupon_code: ''
       }
     },
     methods: {
@@ -134,9 +181,36 @@
         vm.isLoading = true;
         this.$http.get(api).then((res) => {
           if (res.data.success) {
-            vm.products = res.data.products;
+            vm.cart = res.data.data;
             vm.isLoading = false;
           }
+        })
+      },
+      removeCartItem(id) {
+        const api = `${process.env.API_PATH}/api/${process.env.CUSTOM_PATH}/cart/${id}`;
+        const vm = this;
+        vm.isLoading = true;
+        this.$http.delete(api).then((res) => {
+          if (res.data.success) {
+            vm.getCart();
+          }
+          vm.isLoading = false;
+        })
+      },
+      addCouponCode() {
+        const api = `${process.env.API_PATH}/api/${process.env.CUSTOM_PATH}/coupon`;
+        const vm = this;
+        const coupon = {
+          code: vm.coupon_code
+        };
+        vm.isLoading = true;
+        this.$http.post(api, {data: coupon}).then((res) => {
+          if (res.data.success) {
+            vm.getCart();
+          } else {
+            this.$bus.$emit('message:push', res.data.message, 'danger');
+          }
+          vm.isLoading = false;
         })
       }
     },
