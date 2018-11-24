@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading :active.sync="isLoading"></loading>
     <form class="form-signin" @submit.prevent="signin">
       <h1 class="h3 mb-3 font-weight-normal">請先登入</h1>
       <label for="inputEmail" class="sr-only">Email address</label>
@@ -26,16 +27,21 @@
           username: '',
           password: '',
         },
+        isLoading: false,
       }
     },
     methods: {
       signin() {
         const api = `${process.env.API_PATH}/admin/signin`;
         const vm = this;
+        vm.isLoading = true;
         this.$http.post(api, vm.user).then((res) => {
           if (res.data.success) {
             this.$router.push('/admin/products');
+          } else {
+            this.$bus.$emit('message:push', res.data.message, 'danger');
           }
+          vm.isLoading = false;
         })
       }
     }

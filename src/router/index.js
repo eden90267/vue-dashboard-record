@@ -18,6 +18,10 @@ const router = new Router({
       redirect: 'login'
     },
     {
+      path: '/',
+      redirect: '/customer-orders'
+    },
+    {
       path: '/login',
       name: 'Login',
       component: Login

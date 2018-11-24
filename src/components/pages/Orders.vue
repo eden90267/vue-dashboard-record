@@ -1,5 +1,6 @@
 <template>
   <div>
+    <loading :active.sync="isLoading"></loading>
     <table class="table mt-4">
       <thead>
       <tr>
@@ -42,7 +43,8 @@
     data() {
       return {
         orders: [],
-        pagination: {}
+        pagination: {},
+        isLoading: false,
       };
     },
     methods: {
