@@ -271,16 +271,17 @@
             vm.isLoading = true;
             vm.$http.post(api, {data: order}).then((res) => {
               if (res.data.success) {
-                vm.getCart();
-                vm.form = {
-                  user: {
-                    name: '',
-                    email: '',
-                    tel: '',
-                    address: ''
-                  },
-                  message: '',
-                };
+                // vm.getCart();
+                // vm.form = {
+                //   user: {
+                //     name: '',
+                //     email: '',
+                //     tel: '',
+                //     address: ''
+                //   },
+                //   message: '',
+                // };
+                vm.$router.push(`/customer-checkout/${res.data.orderId}`);
               } else {
                 vm.$bus.$emit('message:push', res.data.message, 'danger');
               }

@@ -4,7 +4,9 @@ import axios from 'axios'
 import Login from '@/components/pages/Login'
 import Dashboard from '@/components/Dashboard'
 import Products from '@/components/pages/Products'
+import Orders from '@/components/pages/Orders'
 import CustomerOrders from '@/components/pages/CustomerOrders'
+import CustomerCheckout from '@/components/pages/CustomerCheckout'
 
 Vue.use(Router)
 
@@ -31,6 +33,12 @@ const router = new Router({
           component: Products,
           meta: {requiresAuth: true}, // 路由訊息
         },
+        {
+          path: 'orders',
+          name: 'orders',
+          component: Orders,
+          meta: {requiresAuth: true}, // 路由訊息
+        },
       ]
     },
     {
@@ -41,6 +49,11 @@ const router = new Router({
           path: 'customer-orders',
           name: 'CustomerOrders',
           component: CustomerOrders
+        },
+        {
+          path: 'customer-checkout/:orderId',
+          name: 'CustomerCheckout',
+          component: CustomerCheckout
         },
       ]
     },
